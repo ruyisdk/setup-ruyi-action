@@ -74,7 +74,11 @@ jobs:
     name: Test virtual environment
     strategy:
       matrix:
-        runs-on: [ubuntu-latest, ubuntu-24.04-arm]
+        include:
+          - runs-on: ubuntu-latest
+            venv-emulator: qemu-user-riscv-upstream
+          - runs-on: ubuntu-24.04-arm
+            venv-emulator: ""
     runs-on: ${{ matrix.runs-on }}
     steps:
       - name: Checkout
@@ -86,7 +90,7 @@ jobs:
         with:
           venv-profile: generic
           venv-toolchain: gnu-upstream
-          venv-emulator: qemu-user-riscv-upstream
+          venv-emulator: ${{ matrix.venv-emulator }}
 
       - name: Smoke-test cross-compilation and emulation
         run: |
