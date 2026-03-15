@@ -13,7 +13,7 @@ architecture, verifies its SHA256 checksum, and adds it to `PATH`.
 ```yaml
 steps:
   - name: Setup ruyi
-    uses: ruyisdk/setup-ruyi-action@main
+    uses: ruyisdk/setup-ruyi-action@v1
 ```
 
 ### Pin to a specific version
@@ -21,7 +21,7 @@ steps:
 ```yaml
 steps:
   - name: Setup ruyi
-    uses: ruyisdk/setup-ruyi-action@main
+    uses: ruyisdk/setup-ruyi-action@v1
     with:
       ruyi-version: '0.46.0'
 ```
@@ -31,7 +31,7 @@ steps:
 ```yaml
 steps:
   - name: Setup latest beta
-    uses: ruyisdk/setup-ruyi-action@main
+    uses: ruyisdk/setup-ruyi-action@v1
     with:
       ruyi-version: 'beta'
 ```
@@ -44,7 +44,7 @@ Supported channel values: `latest` / `stable` (latest stable release),
 ```yaml
 steps:
   - name: Setup ruyi for arm64
-    uses: ruyisdk/setup-ruyi-action@main
+    uses: ruyisdk/setup-ruyi-action@v1
     with:
       arch: 'arm64'
 ```
@@ -55,7 +55,7 @@ steps:
 steps:
   - name: Setup ruyi
     id: ruyi
-    uses: ruyisdk/setup-ruyi-action@main
+    uses: ruyisdk/setup-ruyi-action@v1
 
   - name: Print version
     run: |
@@ -70,7 +70,7 @@ steps:
 steps:
   - name: Setup ruyi with venv
     id: ruyi
-    uses: ruyisdk/setup-ruyi-action@main
+    uses: ruyisdk/setup-ruyi-action@v1
     with:
       venv-profile: 'generic'
       venv-toolchain: 'gnu-upstream'
@@ -88,7 +88,7 @@ steps:
 ```yaml
 steps:
   - name: Setup ruyi with custom repo
-    uses: ruyisdk/setup-ruyi-action@main
+    uses: ruyisdk/setup-ruyi-action@v1
     with:
       repo-remote: 'https://mirror.example.com/ruyi-repo'
       repo-branch: 'testing'
