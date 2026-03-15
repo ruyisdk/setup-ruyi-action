@@ -83,6 +83,17 @@ steps:
       riscv64-unknown-linux-gnu-gcc --version
 ```
 
+### Use a custom package repository
+
+```yaml
+steps:
+  - name: Setup ruyi with custom repo
+    uses: ruyisdk/setup-ruyi-action@main
+    with:
+      repo-remote: 'https://mirror.example.com/ruyi-repo'
+      repo-branch: 'testing'
+```
+
 ## Inputs
 
 | Input | Description | Default |
@@ -97,6 +108,8 @@ steps:
 | `venv-sysroot` | Sysroot behaviour: `with` (default), `without`, or a package specifier. | `with` |
 | `venv-extra-commands-from` | Extra package(s) to add commands to the venv. Separate multiple values with spaces. | _(none)_ |
 | `venv-dest` | Destination path for the virtual environment. | `$RUNNER_TEMP/ruyi-venv` |
+| `repo-remote` | Override the RuyiSDK package repository remote URL. | _(none)_ |
+| `repo-branch` | Override the RuyiSDK package repository branch. | _(none)_ |
 
 ## Outputs
 
