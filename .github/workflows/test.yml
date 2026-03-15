@@ -72,12 +72,14 @@ jobs:
 
   test-venv:
     name: Test virtual environment
-    runs-on: ubuntu-latest
+    matrix:
+      runs-on: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runs-on }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup ruyi (latest)
+      - name: Setup ruyi and venv
         id: ruyi
         uses: ./
         with:
