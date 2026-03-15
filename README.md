@@ -64,6 +64,25 @@ steps:
       ruyi version
 ```
 
+### Create a virtual environment
+
+```yaml
+steps:
+  - name: Setup ruyi with venv
+    id: ruyi
+    uses: ruyisdk/setup-ruyi-action@main
+    with:
+      venv-profile: 'generic'
+      venv-toolchain: 'gnu-upstream'
+      venv-emulator: 'qemu-user-riscv-upstream'
+
+  - name: Use cross-compiler
+    run: |
+      echo "Venv at: ${{ steps.ruyi.outputs.venv-root }}"
+      # The venv's bin/ is already on PATH
+      riscv64-unknown-linux-gnu-gcc --version
+```
+
 ## Inputs
 
 | Input | Description | Default |
@@ -71,6 +90,13 @@ steps:
 | `ruyi-version` | Version of `ruyi` to install. A version number (e.g. `0.46.0`) or a channel: `latest`/`stable`, `beta`, `alpha`. | `latest` |
 | `arch` | Target architecture. `auto` detects from the runner. Any value is accepted and used as the arch suffix in the download URL. | `auto` |
 | `github-token` | GitHub token for API requests (avoids rate limiting). | `${{ github.token }}` |
+| `venv-profile` | RuyiSDK virtual environment profile (e.g. `generic`, `sipeed-lpi4a`). If set, a venv is created and activated for subsequent steps. | _(none)_ |
+| `venv-toolchain` | Toolchain package specifier(s) for the venv. Separate multiple values with spaces. | _(none)_ |
+| `venv-emulator` | Emulator package specifier for the venv. | _(none)_ |
+| `venv-name` | Override the virtual environment name. | _(none)_ |
+| `venv-sysroot` | Sysroot behaviour: `with` (default), `without`, or a package specifier. | `with` |
+| `venv-extra-commands-from` | Extra package(s) to add commands to the venv. Separate multiple values with spaces. | _(none)_ |
+| `venv-dest` | Destination path for the virtual environment. | `$RUNNER_TEMP/ruyi-venv` |
 
 ## Outputs
 
@@ -78,6 +104,7 @@ steps:
 |---|---|
 | `ruyi-version` | The version of `ruyi` that was installed |
 | `ruyi-path` | The absolute path to the installed `ruyi` binary |
+| `venv-root` | The absolute path to the created virtual environment (empty if no venv was requested) |
 
 ## Supported platforms
 

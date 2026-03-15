@@ -26,6 +26,44 @@ inputs:
     description: 'GitHub token for API requests (to avoid rate limiting when resolving latest version).'
     required: false
     default: ${{ github.token }}
+  venv-profile:
+    description: >
+      RuyiSDK virtual environment profile to use (e.g. "generic",
+      "sipeed-lpi4a"). If set, a virtual environment is created and
+      activated for subsequent steps.
+    required: false
+    default: ''
+  venv-toolchain:
+    description: >
+      Specifier (atom) of the toolchain package to use for the virtual
+      environment. May be given multiple times separated by spaces.
+    required: false
+    default: ''
+  venv-emulator:
+    description: 'Specifier (atom) of the emulator package to use.'
+    required: false
+    default: ''
+  venv-name:
+    description: 'Override the virtual environment name.'
+    required: false
+    default: ''
+  venv-sysroot:
+    description: >
+      Sysroot behaviour: "with" (default, provision a sysroot),
+      "without" (no sysroot), or a package specifier (atom) to use
+      as the sysroot source.
+    required: false
+    default: 'with'
+  venv-extra-commands-from:
+    description: >
+      Specifier(s) (atoms) of extra packages to add commands to the
+      virtual environment. Separate multiple values with spaces.
+    required: false
+    default: ''
+  venv-dest:
+    description: 'Destination path for the virtual environment.'
+    required: false
+    default: ''
 
 outputs:
   ruyi-version:
@@ -34,6 +72,9 @@ outputs:
   ruyi-path:
     description: 'The path to the installed ruyi binary'
     value: ${{ steps.setup.outputs.ruyi-path }}
+  venv-root:
+    description: 'The absolute path to the created virtual environment (empty if no venv was requested)'
+    value: ${{ steps.venv.outputs.venv-root }}
 
 runs:
   using: 'composite'
@@ -46,3 +87,16 @@ runs:
         INPUT_ARCH: ${{ inputs.arch }}
         INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
       run: bash "${{ github.action_path }}/setup-ruyi.sh"
+    - name: Create RuyiSDK virtual environment
+      id: venv
+      if: inputs.venv-profile != ''
+      shell: bash
+      env:
+        INPUT_VENV_PROFILE: ${{ inputs.venv-profile }}
+        INPUT_VENV_TOOLCHAIN: ${{ inputs.venv-toolchain }}
+        INPUT_VENV_EMULATOR: ${{ inputs.venv-emulator }}
+        INPUT_VENV_NAME: ${{ inputs.venv-name }}
+        INPUT_VENV_SYSROOT: ${{ inputs.venv-sysroot }}
+        INPUT_VENV_EXTRA_COMMANDS_FROM: ${{ inputs.venv-extra-commands-from }}
+        INPUT_VENV_DEST: ${{ inputs.venv-dest }}
+      run: bash "${{ github.action_path }}/setup-ruyi-venv.sh"
