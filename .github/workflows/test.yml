@@ -89,7 +89,7 @@ jobs:
         run: |
           riscv64-unknown-linux-gnu-gcc --version
           echo '#include <stdio.h>' > hello.c
-          echo 'int main() { printf("Hello, world!\\n"); return 0; }' >> hello.c
+          echo 'int main() { printf("Hello, world!\n"); return 0; }' >> hello.c
           riscv64-unknown-linux-gnu-gcc -O2 -g hello.c -o hello
           file hello
           ruyi-qemu hello
