@@ -19,7 +19,7 @@ resolve_arch() {
         aarch64) echo "arm64" ;;
         riscv64) echo "riscv64" ;;
         *)
-            echo "::error::Cannot auto-detect architecture: unsupported uname -m value '$machine'. Please set the arch input explicitly."
+            echo "::error::Cannot auto-detect architecture: unsupported uname -m value '$machine'. Please set the arch input explicitly." >&2
             exit 1
             ;;
     esac
@@ -64,7 +64,7 @@ resolve_channel_version() {
     local channel="$1"
     local token="$2"
 
-    echo "::debug::Resolving latest $channel ruyi version via GitHub API"
+    echo "::debug::Resolving latest $channel ruyi version via GitHub API" >&2
 
     if [[ "$channel" == "stable" ]]; then
         local api_url="https://api.github.com/repos/ruyisdk/ruyi/releases/latest"
@@ -78,7 +78,7 @@ resolve_channel_version() {
         tag_name="$(echo "$response" | jq -r '.tag_name')"
 
         if [[ -z "$tag_name" || "$tag_name" == "null" ]]; then
-            echo "::error::Failed to resolve latest stable ruyi version from GitHub API"
+            echo "::error::Failed to resolve latest stable ruyi version from GitHub API" >&2
             exit 1
         fi
 
@@ -99,7 +99,7 @@ resolve_channel_version() {
         '[.[] | select(.tag_name | contains($ch))][0].tag_name')"
 
     if [[ -z "$tag_name" || "$tag_name" == "null" ]]; then
-        echo "::error::No $channel release found for ruyi"
+        echo "::error::No $channel release found for ruyi" >&2
         exit 1
     fi
 
