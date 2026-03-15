@@ -51,6 +51,31 @@ main() {
 
     cmd+=("$profile" "$dest")
 
+    # Pre-download required packages
+    local install_pkgs=()
+    if [[ -n "$toolchain" ]]; then
+        for tc in $toolchain; do
+            install_pkgs+=("$tc")
+        done
+    fi
+    if [[ -n "$emulator" ]]; then
+        install_pkgs+=("$emulator")
+    fi
+    if [[ "$sysroot" != "with" && "$sysroot" != "without" && -n "$sysroot" ]]; then
+        install_pkgs+=("$sysroot")
+    fi
+    if [[ -n "$extra_commands_from" ]]; then
+        for pkg in $extra_commands_from; do
+            install_pkgs+=("$pkg")
+        done
+    fi
+
+    if [[ ${#install_pkgs[@]} -gt 0 ]]; then
+        echo "Installing required packages..."
+        echo "::debug::Running: ruyi install ${install_pkgs[*]}"
+        ruyi install "${install_pkgs[@]}"
+    fi
+
     echo "Creating RuyiSDK virtual environment..."
     echo "::debug::Running: ${cmd[*]}"
     "${cmd[@]}"
