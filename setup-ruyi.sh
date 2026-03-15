@@ -198,6 +198,17 @@ main() {
     echo "Running smoke test..."
     "$binary_path" --version
 
+    # Configure custom repo remote if provided
+    local repo_remote="${INPUT_REPO_REMOTE:-}"
+    if [[ -n "$repo_remote" ]]; then
+        echo "Configuring custom repo remote: $repo_remote"
+        "$binary_path" config set repo.remote "$repo_remote"
+    fi
+
+    # Update the repository index
+    echo "Updating ruyi repository index..."
+    "$binary_path" update
+
     echo "ruyi ${resolved_version} installed successfully at ${binary_path}"
 }
 

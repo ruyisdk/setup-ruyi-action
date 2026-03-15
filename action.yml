@@ -64,6 +64,13 @@ inputs:
     description: 'Destination path for the virtual environment.'
     required: false
     default: ''
+  repo-remote:
+    description: >
+      Override the RuyiSDK package repository remote URL.
+      If set, runs "ruyi config set repo.remote <url>" before
+      updating the repository index.
+    required: false
+    default: ''
 
 outputs:
   ruyi-version:
@@ -86,6 +93,7 @@ runs:
         INPUT_RUYI_VERSION: ${{ inputs.ruyi-version }}
         INPUT_ARCH: ${{ inputs.arch }}
         INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
+        INPUT_REPO_REMOTE: ${{ inputs.repo-remote }}
       run: bash "${{ github.action_path }}/setup-ruyi.sh"
     - name: Create RuyiSDK virtual environment
       id: venv
