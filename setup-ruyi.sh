@@ -216,6 +216,7 @@ main() {
     esac
     # Let the user see the configured telemetry status in the logs
     "$binary_path" telemetry status -v
+    echo
 
     # Configure custom repo remote if provided
     local repo_remote="${INPUT_REPO_REMOTE:-}"
@@ -234,6 +235,7 @@ main() {
     # Update the repository index
     echo "Updating ruyi repository index..."
     "$binary_path" update
+    echo
 
     echo "ruyi ${resolved_version} installed successfully at ${binary_path}"
 }
