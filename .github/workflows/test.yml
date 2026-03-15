@@ -1,0 +1,71 @@
+name: Test setup-ruyi-action
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test-latest:
+    name: Test latest version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup ruyi (latest)
+        id: ruyi
+        uses: ./
+
+      - name: Verify ruyi is on PATH
+        run: command -v ruyi
+
+      - name: Print ruyi version
+        run: ruyi version
+
+      - name: Verify outputs
+        run: |
+          [[ -n "${{ steps.ruyi.outputs.ruyi-version }}" ]] || { echo "::error::ruyi-version output is empty"; exit 1; }
+          [[ -f "${{ steps.ruyi.outputs.ruyi-path }}" ]] || { echo "::error::ruyi-path does not point to a file"; exit 1; }
+
+  test-pinned:
+    name: Test pinned version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup ruyi (pinned)
+        id: ruyi
+        uses: ./
+        with:
+          ruyi-version: '0.46.0'
+
+      - name: Verify installed version
+        run: |
+          [[ "${{ steps.ruyi.outputs.ruyi-version }}" == "0.46.0" ]] || { echo "::error::Expected version 0.46.0"; exit 1; }
+          ruyi version
+
+  test-beta:
+    name: Test beta channel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup ruyi (beta)
+        id: ruyi
+        uses: ./
+        with:
+          ruyi-version: 'beta'
+
+      - name: Verify beta version resolved
+        run: |
+          [[ "${{ steps.ruyi.outputs.ruyi-version }}" == *-beta.* ]] || { echo "::error::Expected a beta version"; exit 1; }
+          ruyi version

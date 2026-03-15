@@ -1,0 +1,48 @@
+name: 'Setup RuyiSDK Package Manager'
+description: 'Download and set up the RuyiSDK Package Manager (ruyi) for use in GitHub Actions workflows'
+author: 'RuyiSDK'
+
+branding:
+  icon: 'package'
+  color: 'purple'
+
+inputs:
+  ruyi-version:
+    description: >
+      Version of ruyi to install.
+      Accepts a specific version (e.g. "0.46.0"), or a channel name:
+      "latest"/"stable" for the latest stable release, "beta" for the
+      latest beta, "alpha" for the latest alpha.
+    required: false
+    default: 'latest'
+  arch:
+    description: >
+      Target architecture for the ruyi binary.
+      Use "auto" to detect from the runner. Any value accepted;
+      it is used as the arch suffix in the download URL.
+    required: false
+    default: 'auto'
+  github-token:
+    description: 'GitHub token for API requests (to avoid rate limiting when resolving latest version).'
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  ruyi-version:
+    description: 'The version of ruyi that was installed'
+    value: ${{ steps.setup.outputs.ruyi-version }}
+  ruyi-path:
+    description: 'The path to the installed ruyi binary'
+    value: ${{ steps.setup.outputs.ruyi-path }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup ruyi
+      id: setup
+      shell: bash
+      env:
+        INPUT_RUYI_VERSION: ${{ inputs.ruyi-version }}
+        INPUT_ARCH: ${{ inputs.arch }}
+        INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: bash "${{ github.action_path }}/setup-ruyi.sh"
