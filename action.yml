@@ -71,6 +71,13 @@ inputs:
       updating the repository index.
     required: false
     default: ''
+  repo-branch:
+    description: >
+      Override the RuyiSDK package repository branch.
+      If set, runs "ruyi config set repo.branch <branch>" before
+      updating the repository index.
+    required: false
+    default: ''
 
 outputs:
   ruyi-version:
@@ -94,6 +101,7 @@ runs:
         INPUT_ARCH: ${{ inputs.arch }}
         INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
         INPUT_REPO_REMOTE: ${{ inputs.repo-remote }}
+        INPUT_REPO_BRANCH: ${{ inputs.repo-branch }}
       run: bash "${{ github.action_path }}/setup-ruyi.sh"
     - name: Create RuyiSDK virtual environment
       id: venv

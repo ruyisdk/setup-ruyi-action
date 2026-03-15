@@ -205,6 +205,13 @@ main() {
         "$binary_path" config set repo.remote "$repo_remote"
     fi
 
+    # Configure custom repo branch if provided
+    local repo_branch="${INPUT_REPO_BRANCH:-}"
+    if [[ -n "$repo_branch" ]]; then
+        echo "Configuring custom repo branch: $repo_branch"
+        "$binary_path" config set repo.branch "$repo_branch"
+    fi
+
     # Update the repository index
     echo "Updating ruyi repository index..."
     "$binary_path" update
