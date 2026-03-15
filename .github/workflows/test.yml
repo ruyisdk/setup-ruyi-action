@@ -69,3 +69,27 @@ jobs:
         run: |
           [[ "${{ steps.ruyi.outputs.ruyi-version }}" == *-beta.* ]] || { echo "::error::Expected a beta version"; exit 1; }
           ruyi version
+
+  test-venv:
+    name: Test virtual environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup ruyi (latest)
+        id: ruyi
+        uses: ./
+        with:
+          venv-profile: generic
+          venv-toolchain: gnu-upstream
+          venv-emulator: qemu-user-riscv-upstream
+
+      - name: Smoke-test cross-compilation and emulation
+        run: |
+          riscv64-unknown-linux-gnu-gcc --version
+          echo '#include <stdio.h>' > hello.c
+          echo 'int main() { printf("Hello, world!\\n"); return 0; }' >> hello.c
+          riscv64-unknown-linux-gnu-gcc -O2 -g hello.c -o hello
+          file hello
+          ruyi-qemu hello
