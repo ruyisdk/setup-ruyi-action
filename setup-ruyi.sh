@@ -198,6 +198,23 @@ main() {
     echo "Running smoke test..."
     "$binary_path" --version
 
+    # Configure telemetry mode
+    local telemetry="${INPUT_TELEMETRY:-off}"
+    case "$telemetry" in
+        on|true)
+            echo "Enabling telemetry..."
+            "$binary_path" config set telemetry.mode on
+            ;;
+        off|false)
+            echo "Disabling telemetry..."
+            "$binary_path" config set telemetry.mode off
+            ;;
+        *)
+            echo "::error::Invalid telemetry value '$telemetry'. Use 'on'/'true' or 'off'/'false'."
+            exit 1
+            ;;
+    esac
+
     # Configure custom repo remote if provided
     local repo_remote="${INPUT_REPO_REMOTE:-}"
     if [[ -n "$repo_remote" ]]; then

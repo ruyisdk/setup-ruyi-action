@@ -78,6 +78,13 @@ inputs:
       updating the repository index.
     required: false
     default: ''
+  telemetry:
+    description: >
+      Enable or disable ruyi telemetry.
+      Accepts "on"/"true" to enable, or "off"/"false" to disable.
+      When enabled, telemetry data is uploaded at the end of the job.
+    required: false
+    default: 'off'
 
 outputs:
   ruyi-version:
@@ -102,6 +109,7 @@ runs:
         INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
         INPUT_REPO_REMOTE: ${{ inputs.repo-remote }}
         INPUT_REPO_BRANCH: ${{ inputs.repo-branch }}
+        INPUT_TELEMETRY: ${{ inputs.telemetry }}
       run: bash "${{ github.action_path }}/setup-ruyi.sh"
     - name: Create RuyiSDK virtual environment
       id: venv
@@ -116,3 +124,6 @@ runs:
         INPUT_VENV_EXTRA_COMMANDS_FROM: ${{ inputs.venv-extra-commands-from }}
         INPUT_VENV_DEST: ${{ inputs.venv-dest }}
       run: bash "${{ github.action_path }}/setup-ruyi-venv.sh"
+    - name: Register telemetry upload
+      if: inputs.telemetry == 'on' || inputs.telemetry == 'true'
+      uses: ./post-telemetry

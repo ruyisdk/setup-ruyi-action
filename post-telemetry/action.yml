@@ -1,0 +1,7 @@
+name: 'Post-run telemetry upload'
+description: 'Internal action to upload ruyi telemetry data after the job completes'
+runs:
+  using: 'node20'
+  main: 'main.js'
+  post: 'post.js'
+  post-if: always()
